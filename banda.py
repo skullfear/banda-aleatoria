@@ -1,12 +1,24 @@
 from instrumentos import *
-from random import choice
+from musico import Musico
+from random import randint, choice
 
 class Banda:
     def __init__(self):
-        self.instrumento = []
+        self.instrumento = [Guitarra(), Maracas(), Charrasca(), Bajo(), Violin()]
+        self.musicos = []
 
-    def agregar_instrumento(self, instrumento):
-        self.instrumento.append(instrumento)
+    def asignar_instrumento(self):
+        return choice(self.instrumento)
 
-    def entregar_instrumento(self):
-        return choice (self.instrumento)
+    def crear_banda(self):
+        cant = randint(5,10) 
+        for i in range(cant):
+            self.musicos.append(Musico(self.asignar_instrumento()))
+                                       
+    def afinar_banda(self):
+        for m in self.musicos:
+            print(m.afinar_instrumento())
+        
+    def tocar_banda(self):
+        for m in self.musicos:
+            print(m.tocar_instrumento())
