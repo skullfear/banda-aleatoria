@@ -1,69 +1,50 @@
 import tkinter as tk
-from tkinter import ttk
+from banda import Banda
 
-class Instrumento:
-    def afinar(self):
-        return "Instrumento no afinable"
+class BandaApp:
+    def _init_(self, root):
+        self.root = root
+        self.root.title("Banda App")
+        
+        self.banda = Banda()
+        self.banda.crear_banda()
+        
+        self.afinar_button = tk.Button(root, text="Afinar Banda", command=self.afinar_banda)
+        self.afinar_button.pack()
+        
+        self.tocar_button = tk.Button(root, text="Tocar Banda", command=self.tocar_banda)
+        self.tocar_button.pack()
+        
+        # Agregar imágenes de instrumentos
+        self.imagenes_instrumentos = {
+            "Guitarra": tk.PhotoImage(file="guitarra.png"),
+            "Maracas": tk.PhotoImage(file="maracas.png"),
+            "Charrasca": tk.PhotoImage(file="charrasca.png"),
+            "Bajo": tk.PhotoImage(file="bajo.png"),
+            "Violin": tk.PhotoImage(file="violin.png"),
+        }
 
-    def tocar(self):
-        return "Tocando instrumento"
+        # Crear etiquetas para mostrar las imágenes
+        self.instrumento_label = tk.Label(root, image=None)
+        self.instrumento_label.pack()
 
-class Guitarra(Instrumento):
-    def afinar(self):
-        return "Afinando guitarra"
+    def afinar_banda(self):
+        self.banda.afinar_banda()
+        instrumento_actual = self.banda.musicos[0].instrumento.__class__.__name__
+        self.mostrar_imagen_instrumento(instrumento_actual)
 
-    def tocar(self):
-        return "Tocando guitarra"
+    def tocar_banda(self):
+        self.banda.tocar_banda()
+        instrumento_actual = self.banda.musicos[0].instrumento.__class__.__name__
+        self.mostrar_imagen_instrumento(instrumento_actual)
+    
+    def mostrar_imagen_instrumento(self, nombre_instrumento):
+        if nombre_instrumento in self.imagenes_instrumentos:
+            imagen = self.imagenes_instrumentos[nombre_instrumento]
+            self.instrumento_label.configure(image=imagen)
+            self.instrumento_label.image = imagen
 
-class Maracas(Instrumento):
-    def tocar(self):
-        return "Tocando maracas"
-
-class Charrasca(Instrumento):
-    def tocar(self):
-        return "Tocando charrasca"
-
-class Bajo(Instrumento):
-    def afinar(self):
-        return "Afinando bajo"
-
-    def tocar(self):
-        return "Tocando bajo"
-
-class Violin(Instrumento):
-    def afinar(self):
-        return "Afinando violín"
-
-    def tocar(self):
-        return "Tocando violín"
-
-def mostrar_info_instrumento():
-    instrumento = combo_instrumento.get()
-    if instrumento == "Guitarra":
-        resultado_label.config(text=Guitarra().afinar() + "\n" + Guitarra().tocar())
-    elif instrumento == "Maracas":
-        resultado_label.config(text=Maracas().tocar())
-    elif instrumento == "Charrasca":
-        resultado_label.config(text=Charrasca().tocar())
-    elif instrumento == "Bajo":
-        resultado_label.config(text=Bajo().afinar() + "\n" + Bajo().tocar())
-    elif instrumento == "Violín":
-        resultado_label.config(text=Violin().afinar() + "\n" + Violin().tocar())
-    else:
-        resultado_label.config(text="Instrumento no encontrado")
-
-ventana = tk.Tk()
-ventana.title("Aplicación de Instrumentos")
-
-instrumentos = ["Guitarra", "Maracas", "Charrasca", "Bajo", "Violín"]
-combo_instrumento = ttk.Combobox(ventana, values=instrumentos)
-combo_instrumento.pack()
-
-mostrar_button = tk.Button(ventana, text="Mostrar Info", command=mostrar_info_instrumento)
-mostrar_button.pack()
-
-resultado_label = tk.Label(ventana, text="")
-resultado_label.pack()
-
-ventana.mainloop()
-
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = BandaApp(root)
+    root.mainloop()
