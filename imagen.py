@@ -1,5 +1,4 @@
 import tkinter as tk
-from banda import Musico, Banda
 from PIL import Image, ImageTk
 from principal import *
 
