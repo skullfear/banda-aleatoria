@@ -1,50 +1,40 @@
 import tkinter as tk
-from banda import Banda
+from banda import Musico, Banda
+from PIL import Image, ImageTk
+from principal import *
 
-class BandaApp:
-    def _init_(self, root):
-        self.root = root
-        self.root.title("Banda App")
+# Diccionario que relaciona instrumentos con rutas de imágenes
+imagenes_instrumentos = {
+    "guitarra": "guitarra.png",
+    "bateria": "bateria.png",
+    "piano": "piano.png",
+    "bajo": "bajo.png",
+    "flauta": "flauta.png"
+}
+
+# Función para mostrar la imagen del instrumento actual
+def mostrar_imagen(instrumento):
+    if instrumento in imagenes_instrumentos:
+        imagen_path = imagenes_instrumentos[instrumento]
+        imagen = Image.open(imagen_path)
         
-        self.banda = Banda()
-        self.banda.crear_banda()
-        
-        self.afinar_button = tk.Button(root, text="Afinar Banda", command=self.afinar_banda)
-        self.afinar_button.pack()
-        
-        self.tocar_button = tk.Button(root, text="Tocar Banda", command=self.tocar_banda)
-        self.tocar_button.pack()
-        
-        # Agregar imágenes de instrumentos
-        self.imagenes_instrumentos = {
-            "Guitarra": tk.PhotoImage(file="guitarra.png"),
-            "Maracas": tk.PhotoImage(file="maracas.png"),
-            "Charrasca": tk.PhotoImage(file="charrasca.png"),
-            "Bajo": tk.PhotoImage(file="bajo.png"),
-            "Violin": tk.PhotoImage(file="violin.png"),
-        }
+        # Mostrar la imagen en el lienzo
+        imagen_tk = ImageTk.PhotoImage(imagen)
+        lienzo.create_image(0, 0, anchor=tk.NW, image=imagen_tk)
+        lienzo.image = imagen_tk
 
-        # Crear etiquetas para mostrar las imágenes
-        self.instrumento_label = tk.Label(root, image=None)
-        self.instrumento_label.pack()
+# Crear una ventana
+ventana = tk.Tk()
+ventana.title("Banda de Músicos")
 
-    def afinar_banda(self):
-        self.banda.afinar_banda()
-        instrumento_actual = self.banda.musicos[0].instrumento.__class__.__name__
-        self.mostrar_imagen_instrumento(instrumento_actual)
+# Crear botones para cargar imágenes de instrumentos
+for instrumento in imagenes_instrumentos:
+    boton = tk.Button(ventana, text=instrumento, command=lambda instr=instrumento: mostrar_imagen(instr))
+    boton.pack()
 
-    def tocar_banda(self):
-        self.banda.tocar_banda()
-        instrumento_actual = self.banda.musicos[0].instrumento.__class__.__name__
-        self.mostrar_imagen_instrumento(instrumento_actual)
-    
-    def mostrar_imagen_instrumento(self, nombre_instrumento):
-        if nombre_instrumento in self.imagenes_instrumentos:
-            imagen = self.imagenes_instrumentos[nombre_instrumento]
-            self.instrumento_label.configure(image=imagen)
-            self.instrumento_label.image = imagen
+# Crear un lienzo para mostrar la imagen
+lienzo = tk.Canvas(ventana, width=400, height=400)
+lienzo.pack()
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = BandaApp(root)
-    root.mainloop()
+# Iniciar la aplicación tkinter
+ventana.mainloop()
